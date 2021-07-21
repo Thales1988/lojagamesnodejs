@@ -1,4 +1,5 @@
 import UserRepository from './users.js'
-import PostRepository from './posts.js'
+import CategoryRepository from './category.js'
+import GamesRepository from './games.js'
 
-export { UserRepository, PostRepository }
+export { UserRepository, CategoryRepository, GamesRepository }
