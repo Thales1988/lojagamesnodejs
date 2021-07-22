@@ -1,4 +1,4 @@
 import UserService from './users.js'
-import PostService from './posts.js'
+import CategoryService from './categories.js'
 
-export { UserService, PostService }
+export { UserService, CategoryService }

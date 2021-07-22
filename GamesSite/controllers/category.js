@@ -1,36 +1,36 @@
 import express from 'express';
-import { PostService } from '../services/index.js';
-import { validationCreatePost } from '../validations/posts.js';
+import { CategoryService } from '../services/index.js';
+import { validationCreateCategory } from '../validations/categories.js';
 import validator from '../middleware/validate.js';
 import auth from '../middleware/auth.js';
 
-let service = new PostService();
+let service = new CategoryService();
 
 const router = express.Router();
 
-const prefix = 'post';
+const prefix = 'category';
 
 router.post(
   '/create',
   auth,
-  validationCreatePost,
+  validationCreateCategory,
   validator,
   async (req, res) => {
     let { body } = req;
 
-    let post = await service.create({
+    let category = await service.create({
       ...body,
       user: req.user._id,
     });
 
-    res.status(201).json(post);
+    res.status(201).json(category);
   }
 );
 
-router.get('/search', auth, async (req, res) => {
-  const { _id } = req.user;
-  let user = await service.get({ user: _id });
-  res.status(200).json(user);
+router.get('/search/:category', async (req, res) => {
+  const category = req.params;
+  let games = await service.get(category);
+  res.status(200).json(games);
 });
 
 export default {
