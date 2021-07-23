@@ -11,16 +11,13 @@ const router = express.Router();
 const prefix = 'category';
 
 router.post(
-  '/create',
-  auth,
-  validationCreateCategory,
-  validator,
-  async (req, res) => {
+  '/create/:game', async (req, res) => {
+    let { game } = req.params
     let { body } = req;
 
     let category = await service.create({
-      ...body,
-      user: req.user._id,
+      ...body, game,
+
     });
 
     res.status(201).json(category);

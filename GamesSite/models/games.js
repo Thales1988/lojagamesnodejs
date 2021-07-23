@@ -19,7 +19,7 @@ const gameSchema = new Schema({
   },
 
   price: {
-    type: Number,
+    type: String,
     required: true,
   },
 
@@ -31,7 +31,8 @@ const gameSchema = new Schema({
 
   category: [{
     type: Schema.Types.ObjectId,
-    ref: 'categories'
+    ref: 'categories',
+    unique: true
   }]
 })
 

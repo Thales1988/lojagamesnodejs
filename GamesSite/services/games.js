@@ -8,7 +8,7 @@ export default class GameService extends Service {
 
   async get(filter) {
     let { gameName, ...rest } = filter
-    let query = this.repository.find().populate('posts')
+    let query = this.repository.find().populate('category')
 
     if (gameName) {
       query = query.find({
@@ -20,7 +20,9 @@ export default class GameService extends Service {
     return query
   }
 
-
-
+  async addGame(gameId) {
+    await this.repository.findOneAndUpdate(
+      { $push: { category: gameId } }
+    )
+  }
 }
-

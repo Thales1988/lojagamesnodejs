@@ -5,9 +5,8 @@ const categorySchema = new Schema({
   category: {
     type: String,
     required: true,
-    unique: true,
   },
-  games: {
+  game: {
     type: Schema.Types.ObjectId,
     ref: 'games',
     required: true,

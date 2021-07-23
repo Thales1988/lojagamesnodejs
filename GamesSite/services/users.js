@@ -43,13 +43,6 @@ export default class UserService extends Service {
     return user ? true : false
   }
 
-  async addPost(userId, postId) {
-    await this.repository.findOneAndUpdate(
-      {
-        _id: userId,
-      },
-      { $push: { posts: postId } }
-    )
-  }
+
 
 }
