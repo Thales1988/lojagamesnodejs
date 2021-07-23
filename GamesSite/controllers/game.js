@@ -7,16 +7,13 @@ const router = express.Router()
 
 const prefix = 'game'
 
-router.post(
-  '/create',
+router.post('/create', async (req, res) => {
+  let { body } = req
 
-  async (req, res) => {
-    let { body } = req
+  let game = await service.create(body)
 
-    let game = await service.create(body)
-
-    res.status(201).json(game)
-  })
+  res.status(201).json(game)
+})
 
 router.get('/search', async (req, res) => {
   const { query } = req

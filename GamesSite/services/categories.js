@@ -1,9 +1,9 @@
 import Service from './service.js'
 import { CategoryRepository } from '../models/index.js'
-import UserService from './users.js'
+import GameService from './games.js'
 
 
-let userService = new UserService()
+let gameService = new GameService()
 
 export default class CategoryService extends Service {
   constructor() {
@@ -14,11 +14,11 @@ export default class CategoryService extends Service {
     let model = this.repository(obj)
     await model.save()
 
-    await userService.addPost(model.user, model._id)
+    await gameService.addGame(model._id)
 
     return model
   }
   async get(filter) {
-    return this.repository.find(filter).populate('user')
+    return this.repository.find(filter).populate('game')
   }
 }
