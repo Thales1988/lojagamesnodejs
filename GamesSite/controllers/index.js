@@ -1,6 +1,6 @@
 import UserController from './user.js'
 import AuthController from './auth.js'
-import PostController from './category.js'
+import CategoryController from './category.js'
 import GameController from './game.js'
 
-export default [UserController, AuthController, PostController, GameController]
+export default [UserController, AuthController, CategoryController, GameController]

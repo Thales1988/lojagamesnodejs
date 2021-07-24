@@ -1,5 +1,8 @@
 import GamesRepository from "../models/games.js"
+import CategoryService from "./categories.js"
 import Service from "./service.js"
+
+// let oi = new CategoryService()
 
 export default class GameService extends Service {
   constructor() {
@@ -8,7 +11,7 @@ export default class GameService extends Service {
 
   async get(filter) {
     let { gameName, ...rest } = filter
-    let query = this.repository.find().populate('category')
+    let query = this.repository.find().populate({ path: 'category', select: 'category' })
 
     if (gameName) {
       query = query.find({
@@ -24,5 +27,14 @@ export default class GameService extends Service {
     await this.repository.findOneAndUpdate(
       { $push: { category: gameId } }
     )
+  }
+
+  async create(category, game) {
+    let model = this.repository(game)
+    await model.save()
+    let categoryService = new CategoryService()
+    await categoryService.addCategory(category, model._id)
+
+    return model
   }
 }

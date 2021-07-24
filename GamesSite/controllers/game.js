@@ -8,9 +8,9 @@ const router = express.Router()
 const prefix = 'game'
 
 router.post('/create', async (req, res) => {
-  let { body } = req
+  let { category, ...rest } = req.body
 
-  let game = await service.create(body)
+  let game = await service.create(category, rest)
 
   res.status(201).json(game)
 })
