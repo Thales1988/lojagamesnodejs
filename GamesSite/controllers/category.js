@@ -11,12 +11,12 @@ const router = express.Router();
 const prefix = 'category';
 
 router.post(
-  '/create/:game', async (req, res) => {
-    let { game } = req.params
+  '/create', async (req, res) => {
+    //let { game } = req.params
     let { body } = req;
 
     let category = await service.create({
-      ...body, game,
+      ...body,
 
     });
 
