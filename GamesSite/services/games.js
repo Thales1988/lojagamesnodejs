@@ -2,8 +2,6 @@ import GamesRepository from "../models/games.js"
 import CategoryService from "./categories.js"
 import Service from "./service.js"
 
-// let oi = new CategoryService()
-
 export default class GameService extends Service {
   constructor() {
     super(GamesRepository)
@@ -33,7 +31,10 @@ export default class GameService extends Service {
     let model = this.repository(game)
     await model.save()
     let categoryService = new CategoryService()
-    await categoryService.addCategory(category, model._id)
+    let retorno = await categoryService.addCategory(category, model._id)
+
+    await this.repository.findOneAndUpdate({ _id: model._id },
+      { $push: { category: retorno._id } })
 
     return model
   }

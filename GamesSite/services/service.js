@@ -9,7 +9,6 @@ export default class Service {
       upsert: true,
       new: true,
     })
-
   }
 
   async create(obj) {
