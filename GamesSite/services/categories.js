@@ -3,8 +3,6 @@ import { CategoryRepository } from '../models/index.js'
 import GameService from './games.js'
 
 
-
-
 export default class CategoryService extends Service {
   constructor() {
     super(CategoryRepository)
@@ -19,5 +17,37 @@ export default class CategoryService extends Service {
       upsert: true,
       new: true,
     })
+  }
+
+  async removeGame(gameId) {
+    return this.repository.updateMany({ category }, { $pull: { category: gameId } })
+
+  }
+
+  async delete(category) {
+    let gameService = new GameService()
+    let cat = await this.repository.find(category)
+    await gameService.removeCategory(cat[0]._id)
+    return this.repository.findOneAndDelete(cat)
+  }
+
+  async create(category, game) {
+    let gameService = new GameService()
+    let add = []
+
+    if (!game.length) { add = {} } else {
+      games = await gameService.get(game)
+      add = { $push: { game: games[0]._id } }
+    }
+
+    let res = await this.repository.findOneAndUpdate(category,
+      add, {
+      upsert: true,
+      new: true,
+    })
+
+
+    return await gameService.addGame(res._id, game)
+
   }
 }

@@ -5,10 +5,10 @@ const categorySchema = new Schema({
   category: {
     type: String,
   },
-  game: [{
+  game: {
     type: Schema.Types.ObjectId,
     ref: 'games',
-  }]
+  }
 })
 
 export default mongoose.model('categories', categorySchema)
