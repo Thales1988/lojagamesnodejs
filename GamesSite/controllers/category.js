@@ -12,13 +12,10 @@ const prefix = 'category';
 
 router.post(
   '/create', async (req, res) => {
-    //let { game } = req.params
+    let { query } = req
     let { body } = req;
 
-    let category = await service.create({
-      ...body,
-
-    });
+    let category = await service.create(body, query);
 
     res.status(201).json(category);
   }
@@ -26,9 +23,15 @@ router.post(
 
 router.get('/search/:category', async (req, res) => {
   const category = req.params;
-  let games = await service.get(category);
-  res.status(200).json(games);
+  let categories = await service.get(category);
+  res.status(200).json(categories);
 });
+
+router.delete('/delete', async (req, res) => {
+  const { body } = req
+  await service.delete(body)
+  res.status(200).json({ sucess: true })
+})
 
 export default {
   controller: router,
