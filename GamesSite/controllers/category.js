@@ -33,6 +33,18 @@ router.delete('/delete', async (req, res) => {
   res.status(200).json({ sucess: true })
 })
 
+router.put('/update', async (req, res) => {
+  const { query, body: update } = req
+  let game = await service.put(query, update)
+  res.status(200).json(game)
+})
+
+router.get('/search/:id', auth, async (req, res) => {
+  let { id } = req.params
+  let category = await service.getById(id)
+  res.status(200).json(category)
+})
+
 export default {
   controller: router,
   prefix,
