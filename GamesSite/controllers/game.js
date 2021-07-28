@@ -23,7 +23,7 @@ router.get('/search', async (req, res) => {
 
 router.put('/update', async (req, res) => {
   const { query, body: update } = req
-  let game = await service.testePopulate(update)
+  let game = await service.put(query, update)
   res.status(200).json(game)
 })
 
@@ -31,6 +31,12 @@ router.delete('/delete', async (req, res) => {
   const { body } = req
   let user = await service.delete(body)
   res.status(200).send(user)
+})
+
+router.get('/search/:id', auth, async (req, res) => {
+  let { id } = req.params
+  let game = await service.getById(id)
+  res.status(200).json(game)
 })
 
 export default {
