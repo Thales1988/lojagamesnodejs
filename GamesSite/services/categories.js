@@ -2,7 +2,6 @@ import Service from './service.js'
 import { CategoryRepository } from '../models/index.js'
 import GameService from './games.js'
 
-
 export default class CategoryService extends Service {
   constructor() {
     super(CategoryRepository)
@@ -32,20 +31,19 @@ export default class CategoryService extends Service {
   }
 
   async create(category, game) {
-    let gameService = new GameService()
+    const gameService = new GameService()
     let add = []
 
     if (!game.length) { add = {} } else {
-      games = await gameService.get(game)
+      const games = await gameService.get(game)
       add = { $push: { game: games[0]._id } }
     }
 
-    let res = await this.repository.findOneAndUpdate(category,
+    const res = await this.repository.findOneAndUpdate(category,
       add, {
       upsert: true,
-      new: true,
+      new: true
     })
-
 
     return await gameService.addGame(res._id, game)
 

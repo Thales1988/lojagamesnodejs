@@ -4,7 +4,7 @@ import { validationCreateUser } from '../validations/users.js'
 import validator from '../middleware/validate.js'
 import auth from '../middleware/auth.js'
 
-let service = new UserService()
+const service = new UserService()
 
 const router = express.Router()
 
@@ -20,40 +20,38 @@ router.post(
   validator,
 
   async (req, res) => {
-    let { body } = req
+    const { body } = req
 
-    let user = await service.create(body)
+    const user = await service.create(body)
 
     res.status(201).json(user)
-
   })
 
 router.get('/search/:id', auth, async (req, res) => {
-  let { id } = req.params
-  let user = await service.getById(id)
+  const { id } = req.params
+  const user = await service.getById(id)
   res.status(200).json(user)
 })
 
 router.get('/search', auth, async (req, res) => {
   const { query } = req
-  let user = await service.get(query)
+  const user = await service.get(query)
   res.status(200).json(user)
 })
 
 router.put('/update', auth, async (req, res) => {
   const { query, body: update } = req
-  let user = await service.put(query, update)
+  const user = await service.put(query, update)
   res.status(200).json(user)
 })
 
 router.delete('/delete', auth, async (req, res) => {
   const { query } = req
-  let user = await service.delete(query)
+  await service.delete(query)
   res.status(200).json({ success: true })
 })
 
-
 export default {
   controller: router,
-  prefix,
+  prefix
 }

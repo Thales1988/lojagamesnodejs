@@ -3,17 +3,19 @@ const { Schema } = mongoose
 
 const CartSchema = new Schema({
   games: [{
-    type: String,
+    type: String
   }],
   user: {
-    type: String,
+    type: String
   },
-  Payed: {
+  payed: {
     type: Boolean,
-    default: false,
+    default: false
   },
+  amount: [{
+    type: Number,
+    default: 1
+  }]
 })
 
 export default mongoose.model('cart', CartSchema)
-
-
