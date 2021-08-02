@@ -23,7 +23,7 @@ router.post('/add', auth, async (req, res) => {
   const { user, body } = req
 
   const cart = await service.addCart({ user: user._id, ...body })
-
+  console.log()
   res.status(200).json(cart)
 })
 
@@ -32,6 +32,14 @@ router.post('/paying/:_id', auth, async (req, res) => {
   const { body, params } = req
 
   const cart = await service.paying(body, params)
+
+  res.status(200).json(cart)
+})
+
+router.delete('/delGame/:_id', auth, async (req, res) => {
+  const { params, body } = req
+
+  const cart = await service.delGame(params, body.games)
 
   res.status(200).json(cart)
 })
