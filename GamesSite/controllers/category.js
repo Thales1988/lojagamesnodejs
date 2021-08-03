@@ -11,7 +11,7 @@ const router = express.Router()
 const prefix = 'category'
 
 router.post(
-  '/create', async (req, res) => {
+  '/create', validationCreateCategory, async (req, res) => {
     const { query } = req
     const { body } = req
 
