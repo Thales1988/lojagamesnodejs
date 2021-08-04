@@ -22,7 +22,7 @@ export default class UserService extends Service {
   }
 
   async put(filter, update) {
-    return this.repository.findOneAndUpdate(filter, update, {
+    return await this.repository.findOneAndUpdate(filter, update, {
       new: true,
     })
   }

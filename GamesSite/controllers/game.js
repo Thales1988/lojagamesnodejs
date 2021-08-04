@@ -1,6 +1,7 @@
 import express from 'express'
 import GameService from '../services/games.js'
 import { validationCreateGames } from '../validations/games.js'
+import auth from '../middleware/auth.js'
 
 const service = new GameService()
 
@@ -31,10 +32,10 @@ router.get('/search', async (req, res) => {
   }
 })
 
-router.put('/update', async (req, res) => {
-  const { query, body: update } = req
+router.put('/update/:_id', async (req, res) => {
+  const { params, body } = req
   try {
-    const game = await service.put(query, update)
+    const game = await service.put(params, body)
     res.status(200).json(game)
 
   } catch ({ message }) {
@@ -53,7 +54,7 @@ router.delete('/delete', async (req, res) => {
   }
 })
 
-router.get('/search/:id', async (req, res) => {
+router.get('/search/:id', auth, async (req, res) => {
   const { id } = req.params
   try {
     const game = await service.getById(id)
