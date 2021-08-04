@@ -1,8 +1,3 @@
-/* eslint-disable eqeqeq */
-/* eslint-disable lines-between-class-members */
-/* eslint-disable no-unused-vars */
-/* eslint-disable padded-blocks */
-/* eslint-disable space-before-function-paren */
 import GamesRepository from '../models/games.js'
 import CategoryService from './categories.js'
 import Service from './service.js'
@@ -76,6 +71,7 @@ export default class GameService extends Service {
 
     })
   }
+
   async checkPaying(cart) {
     const gameList = await this.repository.find()
 

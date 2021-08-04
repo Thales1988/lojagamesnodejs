@@ -1,8 +1,3 @@
-/* eslint-disable eqeqeq */
-/* eslint-disable no-dupe-keys */
-/* eslint-disable space-before-function-paren */
-/* eslint-disable indent */
-/* eslint-disable padded-blocks */
 import { CartRepository } from '../models/index.js'
 import Service from './service.js'
 import { GameService } from './index.js'

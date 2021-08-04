@@ -10,34 +10,58 @@ const prefix = 'game'
 
 router.post('/create', validationCreateGames, async (req, res) => {
   const { category, ...rest } = req.body
+  try {
+    const game = await service.create(category, rest)
 
-  const game = await service.create(category, rest)
+    res.status(201).json(game)
 
-  res.status(201).json(game)
+  } catch ({ message }) {
+    res.status(400).json({ message })
+  }
 })
 
 router.get('/search', async (req, res) => {
   const { query } = req
-  const game = await service.get(query)
-  res.status(200).json(game)
+  try {
+    const game = await service.get(query)
+    res.status(200).json(game)
+
+  } catch ({ message }) {
+    res.status(400).json({ message })
+  }
 })
 
 router.put('/update', async (req, res) => {
   const { query, body: update } = req
-  const game = await service.put(query, update)
-  res.status(200).json(game)
+  try {
+    const game = await service.put(query, update)
+    res.status(200).json(game)
+
+  } catch ({ message }) {
+    res.status(400).json({ message })
+  }
 })
 
 router.delete('/delete', async (req, res) => {
   const { body } = req
-  const user = await service.delete(body)
-  res.status(200).send(user)
+  try {
+    const user = await service.delete(body)
+    res.status(200).send(user)
+
+  } catch ({ message }) {
+    res.status(400).json({ message })
+  }
 })
 
 router.get('/search/:id', async (req, res) => {
   const { id } = req.params
-  const game = await service.getById(id)
-  res.status(200).json(game)
+  try {
+    const game = await service.getById(id)
+    res.status(200).json(game)
+
+  } catch ({ message }) {
+    res.status(400).json({ message })
+  }
 })
 
 export default {
