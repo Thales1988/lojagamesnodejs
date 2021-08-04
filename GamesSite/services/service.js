@@ -7,7 +7,6 @@ export default class Service {
   async put(query, update) {
     return await this.repository.findOneAndUpdate(query, update, {
       upsert: true,
-      new: true,
     })
 
   }

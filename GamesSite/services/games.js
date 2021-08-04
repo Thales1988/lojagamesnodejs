@@ -36,8 +36,10 @@ export default class GameService extends Service {
   async delete(filter) {
     const game = await this.repository.findOne(filter)
     const categoryService = new CategoryService()
+    if (game == null) { throw new Error('Jogo não encontrado') }
     await categoryService.removeGame(game._id)
-    return this.repository.findOneAndDelete(filter)
+    return await this.repository.findOneAndDelete(filter)
+
   }
 
   async removeCategory(category) {
@@ -53,8 +55,14 @@ export default class GameService extends Service {
 
   async checkStock(filter) {
     const { amount, games: _id } = filter
-    const game = await this.repository.findOne({ _id })
-    return amount <= game.stock
+    try {
+
+      const game = await this.repository.findOne({ _id })
+      return amount <= game.stock
+
+    } catch (message) {
+      throw Error('_id inválido')
+    }
   }
 
   async stockCount(cart) {
@@ -75,13 +83,14 @@ export default class GameService extends Service {
   async checkPaying(cart) {
     const gameList = await this.repository.find()
 
-    cart.games.forEach((gameId, index) => {
+    let oi = cart.games.map((gameId, index) => {
       const gameArray = Object.values(gameList)
 
       const game = gameArray.find(value => value._id == gameId)
+
       return game.stock >= cart.amount[index]
 
     })
-
+    return oi[0]
   }
 }

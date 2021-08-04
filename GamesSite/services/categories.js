@@ -29,27 +29,28 @@ export default class CategoryService extends Service {
 
   async delete(category) {
     let gameService = new GameService()
-    let cat = await this.repository.find(category)
-    await gameService.removeCategory(cat[0]._id)
-    return this.repository.findOneAndDelete(cat)
+    let cat = await this.repository.findOne(category)
+    await gameService.removeCategory(cat._id)
+    return this.repository.findOneAndDelete(category)
   }
 
-  async create(category, game) {
+  async create(category, games) {
     const gameService = new GameService()
     let add = []
 
-    if (game == undefined) { add = {} } else {
-      const games = await gameService.get(game)
-      add = { $push: { game: games[0]._id } }
+    if (games == undefined) { add = {} } else {
+      add = { $push: { game: games._id } }
     }
 
-    const res = await this.repository.findOneAndUpdate(category,
-      add, {
-      upsert: true,
-      new: true
-    })
+    await this.repository.findOneAndUpdate(category,
+      add, { upsert: true })
 
-    return await gameService.addGame(res._id, game)
+    const result = !!Object.values(add).length
 
+    if (result === false) { throw new Error('Categoria Criada') } else {
+      let cat = await this.repository.findOne(category)
+      return await gameService.addGame(cat._id, games)
+
+    }
   }
 }
