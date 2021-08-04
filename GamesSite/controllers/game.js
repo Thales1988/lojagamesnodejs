@@ -1,5 +1,6 @@
 import express from 'express'
 import GameService from '../services/games.js'
+import { validationCreateGames } from '../validations/games.js'
 
 const service = new GameService()
 
@@ -7,7 +8,7 @@ const router = express.Router()
 
 const prefix = 'game'
 
-router.post('/create', async (req, res) => {
+router.post('/create', validationCreateGames, async (req, res) => {
   const { category, ...rest } = req.body
 
   const game = await service.create(category, rest)

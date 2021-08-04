@@ -1,10 +1,11 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable no-dupe-keys */
 /* eslint-disable space-before-function-paren */
 /* eslint-disable indent */
 /* eslint-disable padded-blocks */
-import games from '../models/games.js'
 import { CartRepository } from '../models/index.js'
 import Service from './service.js'
+import { GameService } from './index.js'
 
 export default class CartService extends Service {
   constructor() {
@@ -13,9 +14,11 @@ export default class CartService extends Service {
 
   async addCart(game, _id) {
 
-    const pago = await this.repository.findOne({ _id })
+    const cart = await this.repository.findOne({ _id })
+    const service = new GameService()
+    const stock = await service.checkStock(game)
 
-    if ((pago === null) || (pago && (pago.payed === true))) {
+    if ((cart === null && stock === true) || (cart && (cart.payed && stock === true))) {
       const model = this.repository(game)
       await model.save()
       return model
@@ -23,13 +26,47 @@ export default class CartService extends Service {
 
     const { user, ...rest } = game
 
-    await this.repository.findOneAndUpdate({ _id: pago._id },
-      ({ $push: rest }))
-    return this.repository.findOne(_id)
+    if (cart.games.includes(game.games) && stock === true) {
+      const index = cart.games.findIndex((value) => value == game.games)
+      cart.amount[index] = cart.amount[index] + game.amount
+      game.amount = cart.amount[index]
+      const stock = await service.checkStock(game)
+
+      if (stock === true) {
+        const model = this.repository(cart)
+        await model.save()
+        return model
+      } else {
+        throw new Error('Não temos a quantidade em estoque')
+      }
+    }
+
+    if (stock === true) {
+      await this.repository.findOneAndUpdate({ _id: cart._id },
+        ({ $push: rest }))
+      return this.repository.findOne(_id)
+    } else {
+
+      throw new Error('Não temos a quantidade em estoque')
+    }
+
   }
 
-  async paying(payed, id) {
-    return await this.repository.findOneAndUpdate(id, payed, { rawResult: true })
+  async paying(id) {
+    const cart = await this.repository.findOne(id)
+    const service = new GameService()
+
+    const check = await service.checkPaying(cart)
+
+    if (check === true) {
+
+      await service.stockCount(cart)
+
+      return await this.repository.findOneAndUpdate(id, { $set: { payed: true } })
+
+    } else {
+      throw new Error('Não tem unidades disponiveis')
+    }
   }
 
   async delGame(cartId, game) {
@@ -40,5 +77,9 @@ export default class CartService extends Service {
     cart.amount.splice(index, 1)
 
     return await cart.save()
+  }
+
+  async delete(_id) {
+    return await this.repository.findOneAndDelete({ _id })
   }
 }

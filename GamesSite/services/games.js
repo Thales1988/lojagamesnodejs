@@ -1,8 +1,11 @@
-import GamesRepository from "../models/games.js"
-import CategoryService from "./categories.js"
-import Service from "./service.js"
-
-
+/* eslint-disable eqeqeq */
+/* eslint-disable lines-between-class-members */
+/* eslint-disable no-unused-vars */
+/* eslint-disable padded-blocks */
+/* eslint-disable space-before-function-paren */
+import GamesRepository from '../models/games.js'
+import CategoryService from './categories.js'
+import Service from './service.js'
 
 export default class GameService extends Service {
   constructor() {
@@ -10,7 +13,7 @@ export default class GameService extends Service {
   }
 
   async get(filter) {
-    let { gameName, ...rest } = filter
+    const { gameName, ...rest } = filter
     let query = this.repository.find().populate({ path: 'category', select: 'category' })
 
     if (gameName) {
@@ -23,24 +26,25 @@ export default class GameService extends Service {
     return query
   }
 
-
   async create(category, game) {
-    let model = this.repository(game)
+    const model = this.repository(game)
     await model.save()
 
-    let categoryService = new CategoryService()
-    let retorno = await categoryService.addCategory(category, model._id)
+    const categoryService = new CategoryService()
+    const retorno = await categoryService.addCategory(category, model._id)
 
     await this.repository.findOneAndUpdate({ _id: model._id },
       { $push: { category: retorno._id } })
     return this.repository.find(game).populate({ path: 'category', select: 'category' })
   }
+
   async delete(filter) {
-    let game = await this.repository.findOne(filter)
-    let categoryService = new CategoryService()
+    const game = await this.repository.findOne(filter)
+    const categoryService = new CategoryService()
     await categoryService.removeGame(game._id)
     return this.repository.findOneAndDelete(filter)
   }
+
   async removeCategory(category) {
     return this.repository.updateMany({ category }, { $pull: { category } })
   }
@@ -50,5 +54,38 @@ export default class GameService extends Service {
       { $push: { category } }
     )
     return await this.repository.findOne(game)
+  }
+
+  async checkStock(filter) {
+    const { amount, games: _id } = filter
+    const game = await this.repository.findOne({ _id })
+    return amount <= game.stock
+  }
+
+  async stockCount(cart) {
+    const gameList = await this.repository.find()
+
+    cart.games.forEach((gameId, index) => {
+      const gameArray = Object.values(gameList)
+
+      const game = gameArray.find(value => value._id == gameId)
+
+      game.stock = game.stock - cart.amount[index]
+
+      game.save()
+
+    })
+  }
+  async checkPaying(cart) {
+    const gameList = await this.repository.find()
+
+    cart.games.forEach((gameId, index) => {
+      const gameArray = Object.values(gameList)
+
+      const game = gameArray.find(value => value._id == gameId)
+      return game.stock >= cart.amount[index]
+
+    })
+
   }
 }
