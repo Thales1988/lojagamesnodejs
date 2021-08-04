@@ -49,10 +49,10 @@ router.get('/search', auth, async (req, res) => {
   }
 })
 
-router.put('/update', auth, async (req, res) => {
-  const { query, body: update } = req
+router.put('/update/:_id', auth, async (req, res) => {
+  const { params } = req
   try {
-    const user = await service.put(query, update)
+    const user = await service.put(params, req.body)
     res.status(200).json(user)
 
   } catch ({ message }) {

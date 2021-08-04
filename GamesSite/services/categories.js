@@ -12,14 +12,18 @@ export default class CategoryService extends Service {
   }
 
   async addCategory(category, gameId) {
-    return await this.repository.findOneAndUpdate({ category }, { $push: { game: gameId } }, {
-      upsert: true,
-      new: true,
-    })
+    if (category != undefined) {
+      await this.repository.findOneAndUpdate({ category }, { $push: { game: gameId } }, {
+        upsert: true
+      })
+      return this.repository.findOne({ category })
+    } else {
+      throw new Error('Precisa de uma categoria')
+    }
   }
 
   async removeGame(gameId) {
-    return this.repository.updateMany({ category }, { $pull: { category: gameId } })
+    return this.repository.updateMany({ game: gameId }, { $pull: { game: gameId } })
 
   }
 
@@ -34,7 +38,7 @@ export default class CategoryService extends Service {
     const gameService = new GameService()
     let add = []
 
-    if (!game.length) { add = {} } else {
+    if (game == undefined) { add = {} } else {
       const games = await gameService.get(game)
       add = { $push: { game: games[0]._id } }
     }
