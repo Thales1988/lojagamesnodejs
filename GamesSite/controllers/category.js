@@ -9,11 +9,11 @@ const router = express.Router()
 const prefix = 'category'
 
 router.post(
-  '/create', async (req, res) => {
-    const { query } = req
+  '/create/:_id', auth, async (req, res) => {
+    const { params } = req
     const { body } = req
     try {
-      const category = await service.create(body, query)
+      const category = await service.create(body, params)
 
       res.status(201).json(category)
 
@@ -23,7 +23,22 @@ router.post(
   }
 )
 
-router.get('/search/:category', async (req, res) => {
+router.post(
+  '/create', auth, async (req, res) => {
+
+    const { query } = req
+    try {
+      const category = await service.create(query)
+
+      res.status(201).json(category)
+
+    } catch ({ message }) {
+      res.status(400).json({ message })
+    }
+  }
+)
+
+router.get('/search', auth, async (req, res) => {
   const category = req.params
   try {
     const categories = await service.get(category)
@@ -34,7 +49,18 @@ router.get('/search/:category', async (req, res) => {
   }
 })
 
-router.delete('/delete', async (req, res) => {
+router.get('/search/:_id', auth, async (req, res) => {
+  const { params } = req
+  try {
+    const categories = await service.getById(params)
+    res.status(200).json(categories)
+
+  } catch ({ message }) {
+    res.status(400).json({ message })
+  }
+})
+
+router.delete('/delete', auth, async (req, res) => {
   const { body } = req
   try {
     await service.delete(body)
@@ -45,22 +71,11 @@ router.delete('/delete', async (req, res) => {
   }
 })
 
-router.put('/update', async (req, res) => {
+router.put('/update', auth, async (req, res) => {
   const { query, body: update } = req
   try {
     const game = await service.put(query, update)
     res.status(200).json(game)
-
-  } catch ({ message }) {
-    res.status(400).json({ message })
-  }
-})
-
-router.get('/search/:id', auth, async (req, res) => {
-  const { id } = req.params
-  try {
-    const category = await service.getById(id)
-    res.status(200).json(category)
 
   } catch ({ message }) {
     res.status(400).json({ message })

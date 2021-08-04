@@ -1,7 +1,7 @@
 import express from 'express'
 import auth from '../middleware/auth.js'
 import CartService from '../services/cart.js'
-import { validationCreateCart, validationParams } from '../validations/carts.js'
+import { validationCreateCart, validationBody } from '../validations/carts.js'
 import validator from '../middleware/validate.js'
 
 const service = new CartService()
@@ -39,7 +39,6 @@ router.get('/search', async (req, res) => {
 router.post('/add/:_id',
   auth,
   validationCreateCart,
-  validationParams,
   validator,
 
   async (req, res) => {
@@ -119,7 +118,7 @@ router.delete('/delete/:_id', auth, async (req, res) => {
   }
 })
 
-router.delete('/delete', auth, async (req, res) => {
+router.delete('/delete', auth, validationBody, validator, async (req, res) => {
   try {
     const { body } = req
 
