@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import { verifyToken } from '../helpers/token.js'
 import { UserService } from '../services/index.js'
 

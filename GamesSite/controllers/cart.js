@@ -1,4 +1,3 @@
-/* eslint-disable padded-blocks */
 import express from 'express'
 import auth from '../middleware/auth.js'
 import CartService from '../services/cart.js'
@@ -12,21 +11,29 @@ const router = express.Router()
 const prefix = 'cart'
 
 router.get('/search/:_id', async (req, res) => {
+  try {
+    const { _id } = req.params
 
-  const { _id } = req.params
+    const cart = await service.getById(_id)
 
-  const cart = await service.getById(_id)
+    res.status(200).json(cart)
 
-  res.status(200).json(cart)
+  } catch ({ message }) {
+    res.status(400).json({ message })
+  }
 })
 
 router.get('/search', async (req, res) => {
+  try {
+    const { query } = req
 
-  const { query } = req
+    const cart = await service.get(query)
 
-  const cart = await service.get(query)
+    res.status(200).json(cart)
 
-  res.status(200).json(cart)
+  } catch ({ message }) {
+    res.status(400).json({ message })
+  }
 })
 
 router.post('/add/:_id',
@@ -44,7 +51,7 @@ router.post('/add/:_id',
       res.status(200).json(cart)
 
     } catch ({ message }) {
-      res.status(401).json({ message })
+      res.status(400).json({ message })
     }
   })
 
@@ -64,7 +71,7 @@ router.post(
       res.status(200).json(cart)
 
     } catch ({ message }) {
-      res.status(401).json({ message })
+      res.status(400).json({ message })
     }
   })
 
@@ -81,33 +88,48 @@ router.post('/paying/:_id', auth, async (req, res) => {
     })
 
   } catch ({ message }) {
-    res.status(401).json({ message })
+    res.status(400).json({ message })
   }
 
 })
 
 router.delete('/delete/game/:_id', auth, async (req, res) => {
-  const { params, body } = req
+  try {
+    const { params, body } = req
 
-  const cart = await service.delGame(params, body.games)
+    const cart = await service.delGame(params, body.games)
 
-  res.status(200).json(cart)
+    res.status(200).json(cart)
+
+  } catch ({ message }) {
+    res.status(400).json({ message })
+  }
 })
 
 router.delete('/delete/:_id', auth, async (req, res) => {
-  const { params } = req
+  try {
+    const { params } = req
 
-  await service.delete(params)
+    await service.delete(params)
 
-  res.status(200).json({ sucess: true })
+    res.status(200).json({ sucess: true })
+
+  } catch ({ message }) {
+    res.status(400).json({ message })
+  }
 })
 
 router.delete('/delete', auth, async (req, res) => {
-  const { body } = req
+  try {
+    const { body } = req
 
-  await service.delete(body)
+    await service.delete(body)
 
-  res.status(200).json({ sucess: true })
+    res.status(200).json({ sucess: true })
+
+  } catch ({ message }) {
+    res.status(400).json({ message })
+  }
 })
 
 export default {

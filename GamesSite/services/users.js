@@ -43,6 +43,4 @@ export default class UserService extends Service {
     return user ? true : false
   }
 
-
-
 }
