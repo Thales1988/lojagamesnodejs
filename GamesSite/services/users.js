@@ -13,10 +13,10 @@ export default class UserService extends Service {
 
     if (name) {
       query = query.find({
-        name: { $regex: name, $options: 'i' }
+        name: { $regex: name, $options: 'i' }, active: true
       })
     }
-    query = query.find(rest)
+    query = query.find(rest).find({ active: true })
 
     return query
   }
