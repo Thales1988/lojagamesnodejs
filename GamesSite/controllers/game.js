@@ -33,6 +33,17 @@ router.get('/search', async (req, res) => {
   }
 })
 
+router.get('/search/:id', auth, async (req, res) => {
+  const { id } = req.params
+  try {
+    const game = await service.getById(id)
+    res.status(200).json(game)
+
+  } catch ({ message }) {
+    res.status(400).json({ message })
+  }
+})
+
 router.put('/update/:_id', auth, async (req, res) => {
   const { params, body } = req
   try {
@@ -60,17 +71,6 @@ router.delete('/delete/:_id', auth, async (req, res) => {
   try {
     const user = await service.delete(params)
     res.status(200).send(user)
-
-  } catch ({ message }) {
-    res.status(400).json({ message })
-  }
-})
-
-router.get('/search/:id', auth, async (req, res) => {
-  const { id } = req.params
-  try {
-    const game = await service.getById(id)
-    res.status(200).json(game)
 
   } catch ({ message }) {
     res.status(400).json({ message })

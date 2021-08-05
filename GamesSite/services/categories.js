@@ -18,7 +18,7 @@ export default class CategoryService extends Service {
       })
       return this.repository.findOne({ category })
     } else {
-      throw new Error('Precisa de uma categoria')
+      throw new Error('Jogo criado sem uma categoria')
     }
   }
 
