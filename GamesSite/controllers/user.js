@@ -60,10 +60,10 @@ router.put('/update/:_id', auth, async (req, res) => {
   }
 })
 
-router.delete('/delete', auth, async (req, res) => {
-  const { query } = req
+router.delete('/delete/:_id', async (req, res) => {
+  const { params } = req
   try {
-    await service.delete(query)
+    await service.delete(params)
     res.status(200).json({ success: true })
 
   } catch ({ message }) {
