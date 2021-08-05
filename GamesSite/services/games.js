@@ -83,7 +83,7 @@ export default class GameService extends Service {
   async checkPaying(cart) {
     const gameList = await this.repository.find()
 
-    let oi = cart.games.map((gameId, index) => {
+    let checked = cart.games.map((gameId, index) => {
       const gameArray = Object.values(gameList)
 
       const game = gameArray.find(value => value._id == gameId)
@@ -91,6 +91,6 @@ export default class GameService extends Service {
       return game.stock >= cart.amount[index]
 
     })
-    return oi[0]
+    return checked[0]
   }
 }

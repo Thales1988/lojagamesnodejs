@@ -9,7 +9,7 @@ const router = express.Router()
 const prefix = 'category'
 
 router.post(
-  '/create/:_id', auth, async (req, res) => {
+  '/insert/:_id', auth, async (req, res) => {
     const { params } = req
     const { body } = req
     try {
@@ -26,9 +26,9 @@ router.post(
 router.post(
   '/create', auth, async (req, res) => {
 
-    const { query } = req
+    const { body } = req
     try {
-      const category = await service.create(query)
+      const category = await service.create(body)
 
       res.status(201).json(category)
 

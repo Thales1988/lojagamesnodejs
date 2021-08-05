@@ -22,7 +22,7 @@ router.post('/create', auth, validationCreateGames, validator, async (req, res) 
   }
 })
 
-router.get('/search', auth, async (req, res) => {
+router.get('/search', async (req, res) => {
   const { query } = req
   try {
     const game = await service.get(query)

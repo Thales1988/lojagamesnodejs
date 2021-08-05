@@ -25,10 +25,17 @@ export default class Service {
     return this.repository.find(filter)
   }
 
-  async delete(filter) {
-    return this.repository.findOneAndUpdate(filter, {
-      $set: { active: false },
-    })
-  }
+  async delete(_id) {
+    try {
 
+      let encontrei = await this.repository.findOne({ _id })
+      if (encontrei === null) { throw new Error('_id inexistente') }
+      return await this.repository.findOneAndUpdate({ _id }, {
+        $set: { active: false }
+      })
+
+    } catch ({ message }) {
+      throw new Error('_id inexistente')
+    }
+  }
 }
