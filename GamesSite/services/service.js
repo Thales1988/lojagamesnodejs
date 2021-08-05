@@ -28,8 +28,8 @@ export default class Service {
   async delete(_id) {
     try {
 
-      let encontrei = await this.repository.findOne({ _id })
-      if (encontrei === null) { throw new Error('_id inexistente') }
+      let found = await this.repository.findOne({ _id })
+      if (found === null) { throw new Error('_id inexistente') }
       return await this.repository.findOneAndUpdate({ _id }, {
         $set: { active: false }
       })

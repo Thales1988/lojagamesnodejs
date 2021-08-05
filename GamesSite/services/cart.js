@@ -20,23 +20,27 @@ export default class CartService extends Service {
     }
 
     const { user, ...rest } = game
+    try {
+      if (cart.games.includes(game.games) && stock === true) {
+        const index = cart.games.findIndex((value) => value == game.games)
+        cart.amount[index] = cart.amount[index] + game.amount
+        game.amount = cart.amount[index]
+        const stock = await service.checkStock(game)
 
-    if (cart.games.includes(game.games) && stock === true) {
-      const index = cart.games.findIndex((value) => value == game.games)
-      cart.amount[index] = cart.amount[index] + game.amount
-      game.amount = cart.amount[index]
-      const stock = await service.checkStock(game)
+        if (stock == true) {
+          const model = this.repository(cart)
+          await model.save()
+          return model
+        } else {
+          throw new Error('Não temos a quantidade em estoque')
+        }
 
-      if (stock === true) {
-        const model = this.repository(cart)
-        await model.save()
-        return model
-      } else {
-        throw new Error('Não temos a quantidade em estoque')
       }
+    } catch ({ message }) {
+      throw new Error('Não temos a quantidade em estoque')
     }
 
-    if (stock === true) {
+    if (stock == true) {
       await this.repository.findOneAndUpdate({ _id: cart._id },
         ({ $push: rest }))
       return this.repository.findOne(_id)
@@ -53,14 +57,15 @@ export default class CartService extends Service {
 
     const check = await service.checkPaying(cart)
 
-    if (check === true) {
+    if (check.includes(false)) {
+
+      throw new Error('Não tem unidades disponiveis')
+
+    } else {
 
       await service.stockCount(cart)
 
       return await this.repository.findOneAndUpdate(id, { $set: { payed: true } })
-
-    } else {
-      throw new Error('Não tem unidades disponiveis')
     }
   }
 

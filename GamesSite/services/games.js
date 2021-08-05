@@ -91,6 +91,6 @@ export default class GameService extends Service {
       return game.stock >= cart.amount[index]
 
     })
-    return checked[0]
+    return checked
   }
 }
